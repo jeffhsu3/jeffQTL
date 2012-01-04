@@ -215,11 +215,13 @@ plot_number_eQTLs <- function(result.table){
 
 ####################################################################################
 # Convienence Function for running permutation tests for individual phenotypes.  Uses haley-knott
-# instead of em.  
-#
+# instead of em.  Returns a new result table with the X% percentile genome-wide threshold
+# These calculate the gene-specific threshold in order to deal with the correlation structure.
 ####################################################################################
 
-run_perms <- function(){
-  
+run_perms <- function(cross, result.table, n.perm=1000){
+  index <- match(as.vector(result.table[,1]), colnames(cross$pheno))
+  nperall <- scanone(cross, method="hk", pheno.col=index, n.perm=1000, n.clust=8)
+  n.quantile <- apply(nperall, MARGIN=1, FUN=quantile, probs=c(.95))
 }
   
